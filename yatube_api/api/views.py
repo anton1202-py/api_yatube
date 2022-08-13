@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -27,10 +26,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly, IsAuthenticated,)
 
     def get_queryset(self):
-        # Получаем id поста из эндпоинта
         post_id = self.kwargs.get("post_id")
-        # И отбираем только нужные комментарии
-        new_queryset = Comment.objects.filter(post=post_id)
+        post_check_id = get_object_or_404(Post, id=post_id)
+        new_queryset = Comment.objects.filter(post=post_check_id)
         return new_queryset
 
     def perform_create(self, serializer):
